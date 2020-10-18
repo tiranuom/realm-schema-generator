@@ -20,6 +20,10 @@ interface Article {
   type: ArticleType;
   position: ArticlePosition;
   compoundType: CompoundType;
+  /**
+   * @realm_linked articles
+   */
+  phase?: Phase
 }
 
 enum ArticleType {

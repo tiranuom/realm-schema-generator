@@ -21,6 +21,7 @@ interface CreateProps {
   isArray?: boolean;
   primaryKeyByDocTag: boolean;
   primaryKey: boolean;
+  linkingObjects?: string
 }
 
 interface Context {
@@ -282,6 +283,14 @@ const resolveSchemaProperty = (
     return createProperty("double", options);
   }
 
+  if (hasDocTag(propertySignature, "realm_linked")) {
+    let tag = ts.getJSDocTags(propertySignature).find(tag => tag.tagName.getText() === "realm_linked");
+    return createProperty(typeAsString, {
+      ...options,
+      linkingObjects: tag.comment
+    })
+  }
+
   switch (typeAsString) {
     case "string":
       return createProperty("string", options);
@@ -473,7 +482,8 @@ const createProperty = (
     isArray,
     primaryKey,
     primaryKeyByDocTag,
-    indexed: isIndexed
+    indexed: isIndexed,
+    linkingObjects
   }: CreateProps
 ): {
   key: string;
@@ -498,6 +508,20 @@ const createProperty = (
       primaryKeyByDocTag
     };
   }
+
+  if (!!linkingObjects) {
+    return {
+      key,
+      value: {
+        type: "linkingObjects",
+        objectType: value,
+        property: linkingObjects
+      },
+      primaryKey,
+      primaryKeyByDocTag
+    }
+  }
+
   return {
     key,
     value: {

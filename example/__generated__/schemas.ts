@@ -43,6 +43,11 @@ export const ArticleSchema: ObjectSchema = {
     compoundType: {
       type: 'CompoundType',
     },
+    phase: {
+      type: 'linkingObjects',
+      objectType: 'Phase',
+      property: 'articles',
+    },
   },
 };
 

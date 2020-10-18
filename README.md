@@ -36,6 +36,10 @@ interface Article {
   type: ArticleType;
   position: ArticlePosition;
   compoundType: CompoundType;
+  /**
+   * @realm_linked articles
+   */
+  phase: Phase
 }
 
 enum ArticleType {
@@ -77,3 +81,7 @@ generator(
 ```
 yarn ts-node -T scripts/generateSchemas.ts
 ```
+
+# Note:
+* Recursive dependencies are allowed for the `linkingObject` support. Generation of the schema will fail ff `@realm_linked`
+annotation is not present for a recursive dependent property.
